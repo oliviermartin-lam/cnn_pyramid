@@ -53,16 +53,16 @@ nAll    = nr0*nv*nn
 kIter = 0;
 elapsed = 0;
 
-for iv = 1:1
+for iv = 1:nv
     % update the windspeed value
     atm.layer.windSpeed = v_list(iv);
     % update the AO controller model
     fao.controller('int');
-    for ir0 = 1:1
+    for ir0 = 1:nr0
         %update the r0 value
         atm.r0 = r0_list(ir0);
         psdServo = fao.anisoServoLagPSD(fao.fx,fao.fy);
-        for in = 1:1
+        for in = 1:nn
             kIter = kIter + 1;
             t_i = tic();
             % update the noise value
