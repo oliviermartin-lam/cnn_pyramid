@@ -111,6 +111,26 @@ if ~multicpu
         end
     end
 
+    %
+    close all;
+    
+    figure;
+    imagesc(ngs.phase);
+    pbaspect([1,1,1]);
+    colorbar('TickLabelInterpreter','latex')
+    xlabel('Pixel in the pupil','interpreter','latex','fontsize',16)
+    ylabel('Pixel in the pupil','interpreter','latex','fontsize',16)
+    set(gca,'FontSize',16,'FontName','cmr12','TickLabelInterpreter','latex');
+    
+    figure;
+    imagesc(pyr.camera.frame);
+    pbaspect([1,1,1]);
+    colorbar('TickLabelInterpreter','latex')
+    xlabel('Pixel in the WFS detector plane','interpreter','latex','fontsize',16)
+    ylabel('Pixel in the WFS detector plane','interpreter','latex','fontsize',16)
+    set(gca,'FontSize',16,'FontName','cmr12','TickLabelInterpreter','latex');
+
+
 else
     %% LOOP - MULTI CPU
     % extended list
@@ -134,7 +154,7 @@ else
     
     t1 = tic();
     
-    parfor kIter = 1:100
+    parfor kIter = 1:nAll
         
         t_i = tic();
         
@@ -178,9 +198,9 @@ else
         phaseMap = map(1:nPxPup,1:nPxPup);
         
         % propagate through the pyramid
-        nn = times(ngs,tel);
-        nn.phase = phaseMap;
-        nn = mtimes(nn,pyr);
+        n2 = times(ngs,tel);
+        n2.phase = phaseMap;
+        n2 = mtimes(n2,pyr);
         
         % record outputs
         fitswrite(single(phaseMap),[path_save,'ground_truth_phase_r0_',num2str(r0_list_ext(kIter)),'_v_',num2str(v_list_ext(kIter)),'_noise_',num2str(n_list_ext(kIter)),'.fits']);
@@ -191,22 +211,4 @@ else
     tt = toc(t1);
 end
 
-%%
-close all;
-
-figure;
-imagesc(phaseMap);
-pbaspect([1,1,1]);
-colorbar('TickLabelInterpreter','latex')
-xlabel('Pixel in the pupil','interpreter','latex','fontsize',16)
-ylabel('Pixel in the pupil','interpreter','latex','fontsize',16)
-set(gca,'FontSize',16,'FontName','cmr12','TickLabelInterpreter','latex');
-
-figure;
-imagesc(pyr.camera.frame);
-pbaspect([1,1,1]);
-colorbar('TickLabelInterpreter','latex')
-xlabel('Pixel in the WFS detector plane','interpreter','latex','fontsize',16)
-ylabel('Pixel in the WFS detector plane','interpreter','latex','fontsize',16)
-set(gca,'FontSize',16,'FontName','cmr12','TickLabelInterpreter','latex');
 
