@@ -133,28 +133,33 @@ if ~multicpu
 
 else
     %% LOOP - MULTI CPU
-    % extended list
+    
+    % Check the presence of the COntrol System tool box
+    toolboxesList = ver;
+    flagControlToolBox = any(strcmp(cellstr(char(toolboxesList.Name)), 'Control System Toolbox'));
+    
+    % Extending list of parameters to span a single vector
     r0_list_ext = repelem(r0_list,nv*nn);
     v_list_ext = repelem(repmat(v_list,nr0,1),nn);
     n_list_ext = repmat(n_list,nr0*nv,1);
     
-    % init
-    nPts    = size(fao.fx,1);
-    nTh_    = fao.nTh;
-    h1buf   = zeros(nPts,nPts,nTh_);
-    h2buf   = zeros(nPts,nPts,nTh_);
+    % Initialization of system parameters
+    nPts        = size(fao.fx,1);
+    nTh_        = fao.nTh;
+    h1buf       = zeros(nPts,nPts,nTh_);
+    h2buf       = zeros(nPts,nPts,nTh_);
     thetaWind   = linspace(0, 2*pi-2*pi/nTh_,nTh_);
-    costh       = cos(thetaWind);
-    toolboxesList = ver;
-    flagControlToolBox = any(strcmp(cellstr(char(toolboxesList.Name)), 'Control System Toolbox'));
-    RTF = fao.atf;
-    rngStream = atm.rngStream;
+    costh       = cos(thetaWind);    
+    RTF         = fao.atf;
+    rngStream   = atm.rngStream;
+    pupil       = tel.pupil;
     
+    % Give workers access to OOMAO functions
     addAttachedFiles(gcp,{'telescope.m','telescopeAbstract.m','pyramid.m','source.m'})
     
     t1 = tic();
     
-    parfor kIter = 1:nAll
+    parfor kIter = 1:10
         
         t_i = tic();
         
@@ -195,7 +200,7 @@ else
         
         % Get the phase map
         map = real(ifft2(idx.*sqrt(fftshift(psdAO)).*fft2(randn(rngStream,N))./N).*fourierSampling).*N.^2;
-        phaseMap = map(1:nPxPup,1:nPxPup);
+        phaseMap = pupil.*map(1:nPxPup,1:nPxPup);
         
         % propagate through the pyramid
         n2 = times(ngs,tel);
