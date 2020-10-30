@@ -159,7 +159,7 @@ else
     
     t1 = tic();
     
-    parfor kIter = 1:10
+    parfor kIter = 1:1
         
         t_i = tic();
         

@@ -9,10 +9,10 @@ nPxPup      = 60; % number of pixels to describe the pupil
 
 %% PYRAMID PARAMETERS
 
-nLenslet    = nPxPup; % number of lenslets for the pyramid
+nLenslet    = 10; % number of lenslets for the pyramid
 pyrBinning  = 1;  % binning rate on the pyramid detector
 pyrMod      = 3;  % Modlulation rate on top of the pyramid in lambda/D units
-noiseVar    = 0.01;  % Noise variance in rd^2
+noiseVar    = 0.1;  % Noise variance in rd^2
 Samp        = 2;  % OVer-sampling factor
 resAO       = nPxPup/2 + 1; % number of pixels to describe the AO-correction area in the PSD
 fovInPixel  = nPxPup*2*Samp; % number of pixel to describe the PSD
@@ -29,15 +29,15 @@ L0      = 25;
 
 nr0     = 50;
 r0_min  = 0.03;
-r0_mean = 0.12;
+r0_mean = 0.1;
 r0_std  = 0.03;
 
 nv      = 50;
 v_min   = 1;
-v_mean  = 5;
+v_mean  = 10;
 v_std   = 8;
 
 nn      = 50;
 n_min   = 0;
-n_mean  = 0.01;
+n_mean  = 0.1;
 n_std   = 0.2;
