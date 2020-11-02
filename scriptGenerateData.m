@@ -252,7 +252,7 @@ wfe = zeros(1,nAll);
 t1 = tic();
 
 
-for kIter = 1:1
+parfor kIter = 1:nAll
     
     t_i = tic();
     
