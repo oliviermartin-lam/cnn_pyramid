@@ -248,7 +248,6 @@ idx2 = ((pyr.c-1)/2 + pyr.c) * pyr.nLenslet + 1 : ((pyr.c-1)/2 + pyr.c + 1) * py
 
 % Give workers access to OOMAO functions
 addAttachedFiles(gcp,{'telescope.m','telescopeAbstract.m','pyramid.m','source.m'})
-wfe = zeros(1,nAll);
 t1 = tic();
 
 
@@ -301,7 +300,7 @@ parfor kIter = 1:nAll
     zCoefs_pyr =  wvl_factor*pyr2zern*pyr_frame(:);
     
     % wavefront-error
-    wfe(kIter) = sqrt(n2.var)*wvl_factor;
+    wfe = sqrt(n2.var)*wvl_factor;
 
     % crop image
     pyr_frame = ([pyr_frame(idx1,idx1),pyr_frame(idx2,idx1);pyr_frame(idx1,idx2),pyr_frame(idx2,idx2)]);
