@@ -3,11 +3,11 @@ inputs = inputParser;
 inputs.addRequired('tel', @(x) isa(x,'telescope'));
 inputs.addRequired('wfs', @(x) isa(x,'shackHartmann') || isa(x, 'pyramid'));
 inputs.addRequired('sref',@(x) isa(x,'source'));
-inputs.addParameter('nModes', 200,@isnumeric);
+inputs.addParameter('jIndex', 2:201,@isnumeric);
 inputs.addParameter('nThresholded',0,@isnumeric);
 inputs.addParameter('amp',sref.wavelength/40,@isnumeric);
 inputs.parse(tel,wfs,sref,varargin{:});
-nModes          = inputs.Results.nModes;
+jIndex          = inputs.Results.jIndex;
 nThresholded    = inputs.Results.nThresholded;
 amp             = inputs.Results.amp;
 
@@ -17,7 +17,8 @@ wfs.camera.photonNoise = false;
 %wfs.slopes = 0*wfs.slopes;
 
 %2\ Define Zernike modes, piston-excluded
-zer   = zernike(2:nModes+1,'resolution',tel.resolution,'D',tel.D);
+zer   = zernike(jIndex,'resolution',tel.resolution,'D',tel.D);
+nModes= numel(nModes)
 
 %3\ Calibration
 dm                      = deformableMirror(nModes,'modes',zer,'resolution',tel.resolution);
