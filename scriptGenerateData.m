@@ -13,7 +13,7 @@ eval(parFileName);
 %% INSTANTIATING THE OOMAO CLASSES
 
 % source
-ngs = source('wavelength',photoNGS);
+ngs = source('wavelength',photoNGS,'magnitude',magNGS);
 
 % telescope
 tel = telescope(D,'obstructionRatio',cobs,'resolution',nPxPup);
@@ -175,7 +175,7 @@ close all;clc;
 % if you change the phase amplitude, you'll see that the pyramid-based
 % Zernike reconstruction degrades -> optical gain issue
 wvl_factor  = wvl*1e9/2/pi; % from rad 2 nm
-amp_z       = 50/wvl_factor; %50 nm in amplitude
+amp_z       = 1000/wvl_factor; %50 nm in amplitude
 z_true      = randn(nZern,1)*amp_z;
 ngs         = ngs.*tel;
 ngs.phase   = reshape(zernRec.modes*z_true,tel.resolution,[]);
@@ -264,8 +264,14 @@ idx2 = ((pyr.c-1)/2 + pyr.c) * pyr.nLenslet + 1 : ((pyr.c-1)/2 + pyr.c + 1) * py
 addAttachedFiles(gcp,{'telescope.m','telescopeAbstract.m','pyramid.m','source.m'})
 t1 = tic();
 
+% Manage noise
+if ron
+    pyr.camera.readOutNoise = ron;
+    pyr.camera.photonNoise = true;
+    pyr.camera.quantumEfficiency = QE;
+end
 
-parfor kIter = 1:1
+parfor kIter = 1:nAll
     
     t_i = tic();
     
@@ -337,7 +343,9 @@ parfor kIter = 1:1
     pyr_frame = ([pyr_frame(idx1,idx1),pyr_frame(idx2,idx1);pyr_frame(idx1,idx2),pyr_frame(idx2,idx2)]);
     
     % record outputs
-    fitswrite(single(phaseMap),[path_save,'ground_truth_phase_',idk,'_wfe_',sprintf('%.1f_', wfe),'nm.fits']);
+    % the phase map recording is disbaled to reduce the data amount to be
+    % saved
+    %fitswrite(single(phaseMap),[path_save,'ground_truth_phase_',idk,'_wfe_',sprintf('%.1f_', wfe),'nm.fits']);
     fitswrite(single(zCoefs),[path_save,'ground_truth_zernike_',idk,'_wfe_',sprintf('%.1f_', wfe),'nm.fits']);
     fitswrite(single(zCoefs_pyr),[path_save,'pyramid_based_zernike_',idk,'_wfe_',sprintf('%.1f_', wfe),'nm.fits']);
     fitswrite(single(pyr_frame),[path_save,'measurements_intensity_',idk,'_wfe_',sprintf('%.1f_', wfe),'nm.fits']);
