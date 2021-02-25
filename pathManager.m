@@ -1,8 +1,8 @@
 [~,msg] = unix('echo "$USER"'); % UNIX0platforme compliant only
 if contains(msg,'omartin')
     path_oomao      = '/home/omartin/Projects/SIMULATIONS/OOMAO/oomao/'; % the oomao path
-    path_workspace  = '/home/omartin/Projects/CNN_WFS/cnn_pyramid/'; % the simulation folder path
-    path_save       = '/home/omartin/Projects/CNN_WFS/DICTS/';
+    path_workspace  = '/home/omartin/Projects/MAWSER/cnn_pyramid/'; % the simulation folder path
+    path_save       = '/home/omartin/Projects/MAWSER/DICTS/';
 elseif contains(msg,'matuser')
     path_oomao      = '/result/omartin/SIMULATIONS/OOMAO/mfiles/'; % the oomao path
     path_workspace  = '/result/omartin/Projects/CNN_WFS/cnn_pyramid/'; % the simulation folder path
